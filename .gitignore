@@ -20,3 +20,6 @@ cabal.project.local
 .HTF/
 
 hmatrix-*/
+linear/
+.#*
+mwc-random*
