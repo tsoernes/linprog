@@ -30,23 +30,26 @@ iterate (c, a, b) = nextIteration wyndorInitBF
     nextIteration :: IR -> IR
     nextIteration (k, b_inv, x_b, x_b_vars) = undefined -- (k_new, b_inv_new, x_b_new, x_b_vars)
           where
-            -- The column of coefficients for the entering basic variable
-            test = (slice a (lift (Z:. All :. k)))
-            test' = b_inv * test
-            entering_coeffs = if k <= A.length c
-              -- Entering basic var is an original var; calculate necessary coefficients of b_inv * a
-              then undefined
-              -- Entering basic var is a slack var
-              else slice b_inv (lift (Z :. All :. (k - A.length c)))
+            -- k: Entering basic variable (e.g. 2 for x_2)
 
+            -- The column of coefficients for the entering basic variable
+            entering_coeffs = if k P.<= A.length c
+              -- Entering basic var is an original var;
+              -- calculate only the necessary coefficients of b_inv * a
+              then b_inv #*^ colOf k a
+              -- Entering basic var is a slack var
+              else colOf (k - A.length c) b_inv
+
+            -- Determine the leaving basic variable by finding the most negative
+            -- number in the row of Z (row 0)
+            -- # TODO: How to handle if there's no negative
             r' = unindex1 $ argmin (A.zipWith (/) x_b entering_coeffs) -- leaving basic variable
             r = r' + 1
-            -- b_inv_new = e * b_inv
-            -- e = undefined -- Identity matrix with its r'th column replaced by `eta`
-            -- eta = undefined -- [eta_1, eta_2, .., eta_m] where m: number of constraints = number of rows in b_inv
-            -- eta_i i = if i == r
-            --   then 1 / a_rk
-            --   else 0 --   -a_ik / a_rk
+
+            -- Identity matrix with its r'th column replaced by `eta`
+            e = eta a r k
+            b_inv_new = e #*# b_inv
+
             -- c_b_new = undefined --
             -- c_b_new_i i = if i < A.length c
             --   then get c i
