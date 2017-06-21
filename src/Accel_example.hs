@@ -30,6 +30,9 @@ iterate (c, a, b) = nextIteration wyndorInitBF
     nextIteration :: IR -> IR
     nextIteration (k, b_inv, x_b, x_b_vars) = undefined -- (k_new, b_inv_new, x_b_new, x_b_vars)
           where
+            -- TODO: Examples in book are 1-indexed, while Accelerate arrays are 0-indexed.
+            -- That's a problem.
+
             -- k: Entering basic variable (e.g. 2 for x_2)
 
             -- The column of coefficients for the entering basic variable
@@ -40,21 +43,26 @@ iterate (c, a, b) = nextIteration wyndorInitBF
               -- Entering basic var is a slack var
               else colOf (k - A.length c) b_inv
 
-            -- Determine the leaving basic variable by finding the most negative
-            -- number in the row of Z (row 0)
-            -- # TODO: How to handle if there's no negative
+            -- Minimum ratio test. TODO Does this handle 0's in entering_coeffs?
+            -- Is negative values handled properly?
             r' = unindex1 $ argmin (A.zipWith (/) x_b entering_coeffs) -- leaving basic variable
-            r = r' + 1
+            -- Z is row 0 but (should not) be included in either x_b or entering coeffs,
+            -- need to start counting a 1
+            r = r' + 1 
 
             -- Identity matrix with its r'th column replaced by `eta`
             e = eta a r k
             b_inv_new = e #*# b_inv
 
-            -- c_b_new = undefined --
+            c_b_new = undefined :: Acc (Array DIM1 Double)--
             -- c_b_new_i i = if i < A.length c
             --   then get c i
             --   else 0
-            -- z_non_slack_coeffs = c_b_new * b_inv_new * a - c
+            z_non_slack_coeffs = ((c_b_new ^*# b_inv_new) #*# a) #-# c
+
+            -- Determine the leaving basic variable by finding the most negative
+            -- number in the row of Z (row 0)
+            -- # TODO: How to handle if there's no negative
             -- isOptimal = A.all (>0) z_non_slack_coeffs
             -- k_new = indexArray x_b_vars $ Z :. (argmin z_non_slack_coeffs)
             -- x
