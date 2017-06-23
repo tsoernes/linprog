@@ -1,5 +1,4 @@
 module Linprog (
-  (#+#), (#*#)
 ) where
 
-import Linalg
+-- Main module. determine exports here

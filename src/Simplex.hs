@@ -1,89 +1,94 @@
-module Simplex where
+{-# LANGUAGE RankNTypes #-}
+module Accel_example where
 
-import Data.Array.Accelerate
-import Prelude as P
+import Data.Array.Accelerate as A
+import Data.Array.Accelerate.Interpreter as I
+import Data.Array.Accelerate.Numeric.LinearAlgebra
+-- Vector-vector: (<.>)
+-- Matrix-vector: (#>)
+-- Vector-matrix: (<#)
+-- Matrix-matrix: (<>)
+import Prelude as P hiding ((++))
 
-main :: IO ()
-main = undefined
+import AccelUtils
+import Problem
 
+type Init = (Acc (Vector Double), Acc (Array DIM2 Double), Acc (Vector Double))
+type IR = (Exp Int, Acc (Array DIM2 Double), Acc (Vector Double), Acc (Vector Int))
 
-data Bound x =  x :<=: Double
-             |  x :>=: Double
-             |  x :&: (Double,Double)
-             |  x :==: Double
-             |  Free x
-             deriving Show
+-- | Initilization: Introduce slack variables?? or do this earlier in pipeline
+-- and obtain the initial basic variables
+initSimplex :: Init -> IR
+initSimplex (c, a, b) = undefined
 
-obj :: Bound t -> t
-obj (x :<=: _) = x
-obj (x :>=: _) = x
-obj (x :&: _)  = x
-obj (x :==: _) = x
-obj (Free x)   = x
-
-
-data Solution = Undefined
-              | Feasible (Double, [Double])
-              | Infeasible (Double, [Double])
-              | NoFeasible
-              | Optimal (Double, [Double])
-              | Unbounded
-              deriving Show
-
-data Constraints = Dense   [ Bound [Double] ]
-
-data Optimization = Maximize [Double]
-                  | Minimize [Double]
-
-objCoeffs :: Optimization -> [Double]
-objCoeffs (Maximize li) = li
-objCoeffs (Minimize li) = li
-
-type Bounds = [Bound Int]
-
-data LPprob = LPprob { lpObjfunc :: Optimization
-                     , lpConstrs :: Constraints
-                     , lpBounds :: Bounds
-                     }
-
--- | Check that the problem definition is valid
-verifyProblem :: Optimization -> Constraints -> Bounds -> Either String LPprob
-verifyProblem opt (Dense constrs) bnds = LPprob <$> optsOK <*> constrsOK <*> bndsOK
+simplex :: Init -> Solution
+simplex p@(c, a, b) = fixEither nextIteration $ initSimplex p
   where
-    optsOK = if all (\cs -> length (objCoeffs opt) == length (obj cs)) constrs
-      then Right opt
-      else Left "Number of objective function coefficients not mathing number of constraint coeffs"
-    constrsOK = Right $ Dense constrs
-    bndsOK = Right bnds
-  -- TODO attempt converting to standard form
+    nextIteration :: (Exp Int,                  -- k: Entering basic variable (e.g. 2 for x_2)
+                      Acc (Array DIM2 Double),  -- b_inv: Inverse of basis matrix
+                      Acc (Vector Double),      -- x_b: Values of the basic variables. Corresponds to RHS in tableu.
+                      Acc (Vector Int))         -- x_b_vars: Basic variables
+                  -> Either Solution IR
+    nextIteration (k, b_inv, x_b, x_b_vars) = next
+          where
+            -- TODO: Examples in book are 1-indexed, while Accelerate arrays are 0-indexed.
+            -- That's a problem.
 
--- Ignoring problems which require artifical vars for now
-simplex :: Acc (Vector Double) -> Acc (DIM2 Double) -> Acc (Vector Double) -> Solution
-simplex c a b = iteration initial_bf_sol
-  where
-    initial_bf_sol = undefined
-    iteration :: (Acc (Scalar Int), Acc (DIM2 Double), Acc (Vector Double), Acc (Vector Int)) ->
-      (Acc (Scalar Int), Acc (DIM2 Double), Acc (Vector Double), Acc (Vector Int))
-    iteration (k, b_inv, x_b, x_b_vars) = (k_new, b_inv_new, x_b_new, x_b_vars)
-      where
-        -- k: entering basic variable
-        entering_coeffs = undefined -- The column corresponding to the entering basic variable (how to figure that out?) in the matrix `b_inv * a`
-        argmin = undefined
-        r = 1 + argmin (x_b / entering_coeffs) -- leaving basic variable
-        b_inv_new = e * b_inv
-        e = undefined -- Identity matrix with its r'th column replaced by `eta`
-        eta = undefined -- [eta_1, eta_2, .., eta_m] where m: number of constraints = number of rows in b_inv
-        eta_i i = if i == r
-          then 1 / a_rk
-          else 0 --   -a_ik / a_rk
-        c_b_new = undefined --
-        c_b_new_i i = if i < length c
-          then get c i
-          else 0
-        z_non_slack_coeffs = c_b_new * b_inv_new * a - c
-        isOptimal = all (>0) z_non_slack_coeffs
-        k_new = indexArray x_b_vars $ Z :. (argmin z_non_slack_coeffs)
-        x_b_new = undefined -- Replace leaving variable with entering variable
+            -- ##
+            -- STEP 2: Determine leaving basic variable
+            -- ##
 
--- Determine a basic feasible solution and return the basic variables
-basis = undefined
+            -- The column of coefficients for the entering basic variable
+            entering_coeffs = if k P.<= A.length c
+              -- Entering basic var is an original var;
+              -- calculate only the necessary coefficients of b_inv * a
+              then b_inv #> colOf k a
+              -- Entering basic var is a slack var
+              else colOf (k - A.length c) b_inv
+
+            -- Minimum ratio test. TODO Does this handle 0's in entering_coeffs?
+            -- Is negative values handled properly?
+            leaving_col = argmin (A.zipWith (/) x_b entering_coeffs)
+            r' = x_b_vars ! leaving_col -- leaving basic variable
+            -- Z is row 0 but (should not) be included in either x_b or entering coeffs,
+            -- so need to start counting a 1
+            r = r' + 1
+
+            -- ##
+            -- STEP 3: Update b_inv, c_b and x_b to reflect the change of basic variables
+            -- ##
+
+            -- Identity matrix with its r'th column replaced by `eta`
+            e = eta a r k
+            b_inv_new = e <> b_inv
+
+            -- Replace leaving variable with entering variable
+            x_b_new = b_inv_new #> b
+            i = unindex1 leaving_col
+            x_b_vars_new = A.take (i - 1) x_b_vars ++ vec1 r ++ A.drop i x_b_vars
+            -- Coefficients in the objective function (row 0) for the new basic variables
+            c_b_new = A.map (\j -> (j A.< A.length c) ? (get1 c j, 0)) x_b_vars_new
+
+            -- ##
+            -- STEP 1 / Optimality test: Check if optimal,
+            -- and if not, determine new entering basic variable
+            -- ##
+
+            -- TODO: Only calculate coeffs for the non-basic vars,
+            -- since a basic var cannot be entering basic var
+            z_non_slack_coeffs = (c_b_new <# b_inv_new <> a) #-# c
+            z_slack_coeffs = c_b_new <# b_inv_new
+
+            -- Determine the new entering basic variable by finding the most negative
+            -- number in the row of Z (row 0)
+            imin_nslack = imin z_non_slack_coeffs
+            imin_slack = imin z_slack_coeffs
+            (entering_var, coeff) = untup ((A.snd imin_nslack A.<= A.snd imin_slack) ?
+                                           (imin_nslack, imin_slack))
+            k_new = unindex1 entering_var
+
+            -- If there's no negative coefficient, we've reached an optimal solution
+            coeff' = indexArray (run (unit coeff)) Z
+            next = if coeff' P.< 0
+              then Right (k_new, b_inv_new, x_b_new, x_b_vars)
+              else Left undefined

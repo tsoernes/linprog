@@ -3,12 +3,13 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
 
-module Linalg (
+module AccelUtils (
   (#+#), (#-#),
   argmin, imin,
-  untup,
+  vec1, untup,
   rowOf, colOf,
   get1, get2,
+  fixEither,
   eta
 )where
 
@@ -93,11 +94,11 @@ nRows arr = A.fst $ unindex2 $ shape arr
 nCols :: (Elt e) => Acc (Matrix e) -> Exp Int
 nCols arr = A.snd $ unindex2 $ shape arr
 
-get1 :: (Elt e) => Exp Int -> Acc (Vector e) -> Exp e
-get1 i arr = arr ! index1 i
+get1 :: (Elt e) => Acc (Vector e) -> Exp Int -> Exp e
+get1 arr i = arr ! index1 i
 
-get2 :: (Elt e) => Exp Int -> Exp Int -> Acc (Matrix e) -> Exp e
-get2 r c arr = arr ! index2 r c
+get2 :: (Elt e) => Acc (Matrix e) -> Exp Int -> Exp Int -> Exp e
+get2 arr r c = arr ! index2 r c
 
 rowOf :: (Elt e) => Exp Int -> Acc (Matrix e) -> Acc (Vector e)
 rowOf i arr = slice arr (lift (Z :. i :. All))
@@ -105,6 +106,8 @@ rowOf i arr = slice arr (lift (Z :. i :. All))
 colOf :: (Elt e) => Exp Int -> Acc (Matrix e) -> Acc (Vector e)
 colOf i arr = slice arr (lift (Z :. All :. i))
 
+vec1 :: (Elt e) => Exp e -> Acc (Vector e)
+vec1 e = reshape (constant (Z:.1)) $ unit e
 -- | Constructor for the nxn dimensional identity matrix
 -- identityMatrix :: forall a. (IsNum a, Elt a)
 --                => Int -> Acc (Matrix a)
@@ -129,8 +132,15 @@ eta a r k = A.generate (lift (Z:.n:.n)) aux
                   col = A.snd dim'
               in (col A.== r) ?
                    ((row A.== r) ?
-                        (1.0 / get2 r k a
-                        ,- get2 row k a / get2 r k a)
+                        (1.0 / get2 a r k
+                        ,- get2 a row k / get2 a r k)
                    ,(row A.== col) ?
                         (1
                         ,0))
+
+-- | Fixed point of the Either monad. Feed the output of Right back into
+-- the given function until a Left is produced. May never terminate.
+fixEither :: (a -> Either b a) -> a -> b
+fixEither f a = case f a of
+  Left b -> b
+  Right a' -> fixEither f a'
