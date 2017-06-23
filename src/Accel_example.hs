@@ -2,6 +2,11 @@
 module Accel_example where
 
 import Data.Array.Accelerate as A
+import Data.Array.Accelerate.Numeric.LinearAlgebra
+-- Vector-vector: (<.>)
+-- Matrix-vector: (#>)
+-- Vector-matrix: (<#)
+-- Matrix-matrix: (<>)
 import Prelude as P
 import Linalg
 
@@ -39,7 +44,7 @@ iterate (c, a, b) = nextIteration wyndorInitBF
             entering_coeffs = if k P.<= A.length c
               -- Entering basic var is an original var;
               -- calculate only the necessary coefficients of b_inv * a
-              then b_inv #*^ colOf k a
+              then b_inv #> colOf k a
               -- Entering basic var is a slack var
               else colOf (k - A.length c) b_inv
 
@@ -48,22 +53,21 @@ iterate (c, a, b) = nextIteration wyndorInitBF
             r' = unindex1 $ argmin (A.zipWith (/) x_b entering_coeffs) -- leaving basic variable
             -- Z is row 0 but (should not) be included in either x_b or entering coeffs,
             -- need to start counting a 1
-            r = r' + 1 
+            r = r' + 1
 
             -- Identity matrix with its r'th column replaced by `eta`
             e = eta a r k
-            b_inv_new = e #*# b_inv
+            b_inv_new = e <> b_inv
 
-            c_b_new = undefined :: Acc (Array DIM1 Double)--
-            -- c_b_new_i i = if i < A.length c
-            --   then get c i
-            --   else 0
-            z_non_slack_coeffs = ((c_b_new ^*# b_inv_new) #*# a) #-# c
+            -- Coefficients in the objective function (row 0) for the new basic variables
+            c_b_new = A.map (\i -> (i A.< A.length c) ? (get1 i c, 0)) x_b_vars
+            z_non_slack_coeffs = (c_b_new <# b_inv_new <> a) #-# c
 
             -- Determine the leaving basic variable by finding the most negative
             -- number in the row of Z (row 0)
-            -- # TODO: How to handle if there's no negative
-            -- isOptimal = A.all (>0) z_non_slack_coeffs
-            -- k_new = indexArray x_b_vars $ Z :. (argmin z_non_slack_coeffs)
-            -- x
+            (leaving_var, coeff) = untup $ imin z_non_slack_coeffs
+            -- If there's no negative coefficient, we've reached an optimal solution
+
+            -- The new entering basic variable
+            k_new = indexArray x_b_vars $ Z :. (leaving_var)
             -- _b_new = undefined -- Replace leaving variable with entering variable

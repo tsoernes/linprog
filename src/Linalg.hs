@@ -4,10 +4,12 @@
 {-# LANGUAGE FlexibleContexts #-}
 
 module Linalg (
-  (#+#), (#-#), (#*#), (#*^), (^*#),
+  (#+#), (#-#),
   argmin, imin,
+  untup,
   rowOf, colOf,
-  identityMatrix, eta
+  get1, get2,
+  eta
 )where
 
 import Prelude as P
@@ -34,40 +36,40 @@ infixl 7 #-#
 (#-#) = A.zipWith (-)
 
 
-infixl 7 ^*#
--- | Vector by matrix multiplication
--- TODO this is wrongly implemented
--- >>> run $ (use $ A.fromList (Z:.3) [0,5,3]) ^*# (use $ A.fromList (Z:.3:.3) [1,1/3,-1/3, 0,1/2,0, 0,-1/3,1/3] :: Acc (Matrix Double))
--- Vector (Z :. 3) [0,3/2,1]
-(^*#) :: (A.Num e, Elt e)
-      => Acc (Vector e) -> Acc (Matrix e) -> Acc (Vector e)
-(^*#) vec arr = A.fold (+) 0 $ A.zipWith (*) brr arr
-  where
-    Z :. rowsA :. colsA = unlift (shape arr) :: Z :. Exp Int :. Exp Int
-    brr = A.replicate (lift $ Z :. All :. colsA) vec
+-- infixl 7 ^*#
+-- -- | Vector by matrix multiplication
+-- -- TODO this is incorrecly implemented
+-- -- >>> run $ (use $ A.fromList (Z:.3) [0,5,3]) ^*# (use $ A.fromList (Z:.3:.3) [1,1/3,-1/3, 0,1/2,0, 0,-1/3,1/3] :: Acc (Matrix Double))
+-- -- Vector (Z :. 3) [0,3/2,1]
+-- (^*#) :: (A.Num e, Elt e)
+--       => Acc (Vector e) -> Acc (Matrix e) -> Acc (Vector e)
+-- (^*#) vec arr = A.fold (+) 0 $ A.zipWith (*) brr arr
+--   where
+--     Z :. rowsA :. colsA = unlift (shape arr) :: Z :. Exp Int :. Exp Int
+--     brr = A.replicate (lift $ Z :. All :. colsA) vec
 
 
-infixl 7 #*^
--- | Matrix by vector multiplication
--- >>> run $ (use $ A.fromList (Z:.3:.3) [1,0,0, 0,1/2,0, 0,-1,1] :: Acc (Matrix Double)) #*^ (use $ A.fromList (Z:.3) [4,12,18])
--- Vector (Z :. 3) [4.0,6.0,6.0]
-(#*^) :: (A.Num e, Elt e)
-      => Acc (Matrix e) -> Acc (Vector e) -> Acc (Vector e)
-(#*^) arr vec = A.fold (+) 0 $ A.zipWith (*) arr brr
-  where
-    Z :. rowsA :. _ = unlift (shape arr) :: Z :. Exp Int :. Exp Int
-    brr = A.replicate (lift $ Z :. rowsA :. All) vec
+-- infixl 7 #*^
+-- -- | Matrix by vector multiplication
+-- -- >>> run $ (use $ A.fromList (Z:.3:.3) [1,0,0, 0,1/2,0, 0,-1,1] :: Acc (Matrix Double)) #*^ (use $ A.fromList (Z:.3) [4,12,18])
+-- -- Vector (Z :. 3) [4.0,6.0,6.0]
+-- (#*^) :: (A.Num e, Elt e)
+--       => Acc (Matrix e) -> Acc (Vector e) -> Acc (Vector e)
+-- (#*^) arr vec = A.fold (+) 0 $ A.zipWith (*) arr brr
+--   where
+--     Z :. rowsA :. _ = unlift (shape arr) :: Z :. Exp Int :. Exp Int
+--     brr = A.replicate (lift $ Z :. rowsA :. All) vec
 
-infixl 7 #*#
--- | Matrix by matrix multiplication
-(#*#) :: (A.Num e, Elt e)
-      => Acc (Matrix e) -> Acc (Matrix e) -> Acc (Matrix e)
-(#*#) arr brr = A.fold (+) 0 $ A.zipWith (*) arrRepl brrRepl
-  where
-    Z :. rowsA :. _     = unlift (shape arr) :: Z :. Exp Int :. Exp Int
-    Z :. _     :. colsB = unlift (shape brr) :: Z :. Exp Int :. Exp Int
-    arrRepl = A.replicate (lift $ Z :. All   :. colsB :. All) arr
-    brrRepl = A.replicate (lift $ Z :. rowsA :. All   :. All) (A.transpose brr)
+-- infixl 7 #*#
+-- -- | Matrix by matrix multiplication
+-- (#*#) :: (A.Num e, Elt e)
+--       => Acc (Matrix e) -> Acc (Matrix e) -> Acc (Matrix e)
+-- (#*#) arr brr = A.fold (+) 0 $ A.zipWith (*) arrRepl brrRepl
+--   where
+--     Z :. rowsA :. _     = unlift (shape arr) :: Z :. Exp Int :. Exp Int
+--     Z :. _     :. colsB = unlift (shape brr) :: Z :. Exp Int :. Exp Int
+--     arrRepl = A.replicate (lift $ Z :. All   :. colsB :. All) arr
+--     brrRepl = A.replicate (lift $ Z :. rowsA :. All   :. All) (A.transpose brr)
 
 -- | Index of minimum element
 argmin :: (Shape sh, Elt e, A.Ord e)
@@ -82,11 +84,17 @@ imin xs = the $ fold1All f (indexed xs)
                   (_ :: Exp sh, bv :: Exp e) = unlift b
               in  (av A.>= bv) ? (a, b)
 
+untup :: (Elt a, Elt b) => Exp (a, b) -> (Exp a, Exp b)
+untup tup = (A.fst tup, A.snd tup)
+
 nRows :: (Elt e) => Acc (Matrix e) -> Exp Int
 nRows arr = A.fst $ unindex2 $ shape arr
 
 nCols :: (Elt e) => Acc (Matrix e) -> Exp Int
 nCols arr = A.snd $ unindex2 $ shape arr
+
+get1 :: (Elt e) => Exp Int -> Acc (Vector e) -> Exp e
+get1 i arr = arr ! index1 i
 
 get2 :: (Elt e) => Exp Int -> Exp Int -> Acc (Matrix e) -> Exp e
 get2 r c arr = arr ! index2 r c
@@ -98,11 +106,11 @@ colOf :: (Elt e) => Exp Int -> Acc (Matrix e) -> Acc (Vector e)
 colOf i arr = slice arr (lift (Z :. All :. i))
 
 -- | Constructor for the nxn dimensional identity matrix
-identityMatrix :: forall a. (IsNum a, Elt a)
-               => Int -> Acc (Matrix a)
-identityMatrix n = use $ fromFunction (Z:.n:.n) aux
-  where aux :: DIM2 -> a
-        aux (Z:.i:.j) = if i P.== j then 1 else 0
+-- identityMatrix :: forall a. (IsNum a, Elt a)
+--                => Int -> Acc (Matrix a)
+-- identityMatrix n = use $ fromFunction (Z:.n:.n) aux
+--   where aux :: DIM2 -> a
+--         aux (Z:.i:.j) = if i P.== j then 1 else 0
 
 -- | Eta matrix, which is the identity matrix whith row @r@ replaced with eta values
 -- >>> run $ eta (use $ A.fromList (Z:.3:.3) [1,0,1,0,2,0,3,2,0] :: Acc (Matrix Double)) 1 1
@@ -110,7 +118,6 @@ identityMatrix n = use $ fromFunction (Z:.n:.n) aux
 --   [1.0,-0.0,0.0,
 --    0.0, 0.5,0.0,
 --    0.0,-1.0,1.0]
-
 eta :: forall e. (Elt e, A.Fractional e)
     => Acc (Matrix e) -> Exp Int -> Exp Int -> Acc (Matrix e)
 eta a r k = A.generate (lift (Z:.n:.n)) aux
