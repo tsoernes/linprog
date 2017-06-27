@@ -3,18 +3,11 @@
 {-# LANGUAGE ScopedTypeVariables #-}
 {-# LANGUAGE FlexibleContexts #-}
 
-module AccelUtils (
-  (#+#), (#-#),
-  argmin, imin,
-  vec1, untup,
-  rowOf, colOf,
-  get1, get2,
-  fixEither,
-  eta
-)where
+module AccelUtils where
 
 import Prelude as P
 import Data.Array.Accelerate as A
+import Data.Array.Accelerate.Interpreter as I
 
 -- $setup
 -- >>> import Data.Array.Accelerate.Interpreter as I
@@ -78,15 +71,16 @@ argmin :: (Shape sh, Elt e, A.Ord e)
 argmin arr = A.fst $ imin arr
 
 imin :: forall sh e. (Shape sh, Elt e, A.Ord e)
-       => Acc (Array sh e) -> Exp (sh, e)
+     => Acc (Array sh e) -> Exp (sh, e)
 imin xs = the $ fold1All f (indexed xs)
     where
       f a b = let (_ :: Exp sh, av :: Exp e) = unlift a
                   (_ :: Exp sh, bv :: Exp e) = unlift b
               in  (av A.>= bv) ? (a, b)
 
-untup :: (Elt a, Elt b) => Exp (a, b) -> (Exp a, Exp b)
-untup tup = (A.fst tup, A.snd tup)
+-- This seems dangerous for nested data parallelism
+untup_ :: (Elt a, Elt b) => Exp (a, b) -> (Exp a, Exp b)
+untup_ tup = (A.fst tup, A.snd tup)
 
 nRows :: (Elt e) => Acc (Matrix e) -> Exp Int
 nRows arr = A.fst $ unindex2 $ shape arr
@@ -106,37 +100,15 @@ rowOf i arr = slice arr (lift (Z :. i :. All))
 colOf :: (Elt e) => Exp Int -> Acc (Matrix e) -> Acc (Vector e)
 colOf i arr = slice arr (lift (Z :. All :. i))
 
-vec1 :: (Elt e) => Exp e -> Acc (Vector e)
-vec1 e = reshape (constant (Z:.1)) $ unit e
--- | Constructor for the nxn dimensional identity matrix
--- identityMatrix :: forall a. (IsNum a, Elt a)
---                => Int -> Acc (Matrix a)
--- identityMatrix n = use $ fromFunction (Z:.n:.n) aux
---   where aux :: DIM2 -> a
---         aux (Z:.i:.j) = if i P.== j then 1 else 0
+vecOf :: (Elt e) => [e] -> Acc (Vector e)
+vecOf es = use $ A.fromList (Z:. P.length es) es
 
--- | Eta matrix, which is the identity matrix whith row @r@ replaced with eta values
--- >>> run $ eta (use $ A.fromList (Z:.3:.3) [1,0,1,0,2,0,3,2,0] :: Acc (Matrix Double)) 1 1
--- Matrix (Z :. 3 :. 3)
---   [1.0,-0.0,0.0,
---    0.0, 0.5,0.0,
---    0.0,-1.0,1.0]
-eta :: forall e. (Elt e, A.Fractional e)
-    => Acc (Matrix e) -> Exp Int -> Exp Int -> Acc (Matrix e)
-eta a r k = A.generate (lift (Z:.n:.n)) aux
-  where
-    n = nRows a
-    aux :: (Elt e, A.Fractional e) => Exp DIM2 -> Exp e
-    aux dim = let dim' = unindex2 dim
-                  row = A.fst dim'
-                  col = A.snd dim'
-              in (col A.== r) ?
-                   ((row A.== r) ?
-                        (1.0 / get2 a r k
-                        ,- get2 a row k / get2 a r k)
-                   ,(row A.== col) ?
-                        (1
-                        ,0))
+arrOf :: (Elt e) => Int -> Int -> [e] -> Acc (Matrix e)
+arrOf rows cols es = use $ A.fromList (Z:. rows :. cols) es
+
+vecOf1 :: (Elt e) => Exp e -> Acc (Vector e)
+vecOf1 e = reshape (constant (Z:.1)) $ unit e
+
 
 -- | Fixed point of the Either monad. Feed the output of Right back into
 -- the given function until a Left is produced. May never terminate.
@@ -144,3 +116,15 @@ fixEither :: (a -> Either b a) -> a -> b
 fixEither f a = case f a of
   Left b -> b
   Right a' -> fixEither f a'
+
+runExp :: (Elt e) => Exp e -> e
+runExp e = indexArray (run (unit e)) Z
+
+fstMap :: (Elt a, Elt b, Elt e) => (Exp a -> Exp b) -> Exp (a, e) -> Exp (b, e)
+fstMap f tup = lift (f (A.fst tup), A.snd tup)
+
+sndMap :: (Elt a, Elt b, Elt e) => (Exp a -> Exp b) -> Exp (e, a) -> Exp (e, b)
+sndMap f tup = lift (A.fst tup, f (A.snd tup))
+
+getScalar :: Scalar a -> a
+getScalar scalar = indexArray scalar Z

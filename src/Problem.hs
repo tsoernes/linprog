@@ -53,6 +53,6 @@ verifyProblem opt (Dense constrs) bnds = LPprob <$> optsOK <*> constrsOK <*> bnd
       then Right opt
       else Left "Number of objective function coefficients not mathing number of constraint coeffs"
     constrsOK = Right $ Dense constrs
-    bndsOK = Right bnds
+bndsOK = Right bnds
   -- TODO attempt converting to standard form
 
