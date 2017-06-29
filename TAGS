@@ -1,0 +1,1015 @@
+
+./linear/tests/Plucker.hs,397
+module Plucker Plucker0,1
+ln2,ln3,ln4,ln5,ln6,ln7,ln8,ln9 ln96,7
+ln2,ln3,ln4,ln5,ln6,ln7,ln8,ln86,7
+ln2,ln3,ln4,ln5,ln6,ln7,ln76,7
+ln2,ln3,ln4,ln5,ln6,ln66,7
+ln2,ln3,ln4,ln5,ln56,7
+ln2,ln3,ln4,ln46,7
+ln2,ln3,ln36,7
+ln2,ln26,7
+ln2 ln27,8
+ln3 ln38,9
+ln4 ln49,10
+ln5 ln510,11
+ln6 ln611,12
+ln7 ln712,13
+ln8 ln813,14
+ln9 ln914,15
+tests tests16,17
+tests tests17,18
+
+./linear/tests/UnitTests.hs,94
+module Main Main1,2
+tests tests10,11
+tests tests11,12
+main main18,19
+main main19,20
+
+./linear/tests/doctests.hs,58
+module Main Main13,14
+main main19,20
+main main20,21
+
+./linear/tests/V.hs,81
+module V V1,2
+v10 v108,9
+v10 v109,10
+tests tests11,12
+tests tests12,13
+
+./linear/tests/Binary.hs,165
+module Binary Binary0,1
+originalVecs originalVecs8,9
+originalVecs originalVecs9,10
+bytes bytes11,12
+bytes bytes12,13
+tests tests15,16
+tests tests16,17
+
+./linear/src/Linear/Plucker/Coincides.hs,156
+module Linear.Plucker.CoincidesLinear.Plucker.Coincides12,13
+data Coincides Coincides29,30
+  Line Line30,31
+  Ray Ray31,32
+instance instance33,34
+
+./linear/src/Linear/Algebra.hs,536
+module Linear.AlgebraLinear.Algebra15,16
+class Num r => Algebra Algebra36,37
+class Num r => Algebra Algebra36,37
+  mult mult37,38
+  unital unital38,39
+multRep multRep40,41
+multRep multRep41,42
+unitalRep unitalRep43,44
+unitalRep unitalRep44,45
+instance instance46,47
+class Num r => Coalgebra Coalgebra80,81
+class Num r => Coalgebra Coalgebra80,81
+  comult comult81,82
+  counital counital82,83
+comultRep comultRep84,85
+comultRep comultRep85,86
+counitalRep counitalRep87,88
+counitalRep counitalRep88,89
+
+./linear/src/Linear/Epsilon.hs,171
+module Linear.EpsilonLinear.Epsilon10,11
+class Num a => Epsilon Epsilon28,29
+class Num a => Epsilon Epsilon28,29
+  nearZero nearZero30,31
+instance instance33,34
+
+./linear/src/Linear/Plucker.hs,2351
+module Linear.PluckerLinear.Plucker32,33
+data Plucker Plucker103,104
+data Plucker a = Plucker Plucker103,104
+instance instance113,114
+plucker plucker327,328
+plucker plucker328,329
+plucker3D plucker3D340,341
+plucker3D plucker3D341,342
+p01, p02, p03, p23, p31, p12 p12355,356
+p01, p02, p03, p23, p31,p31355,356
+p01, p02, p03, p23,p23355,356
+p01, p02, p03,p03355,356
+p01, p02,p02355,356
+p01,p01355,356
+p01 p01356,357
+p02 p02357,358
+p03 p03358,359
+p23 p23359,360
+p31 p31360,361
+p12 p12361,362
+p10, p20, p30, p32, p13, p21 p21379,380
+p10, p20, p30, p32, p13,p13379,380
+p10, p20, p30, p32,p32379,380
+p10, p20, p30,p30379,380
+p10, p20,p20379,380
+p10,p10379,380
+p10 p10380,381
+p20 p20381,382
+p30 p30382,383
+p32 p32383,384
+p13 p13384,385
+p21 p21385,386
+anti anti393,394
+anti anti394,395
+e01, e02, e03, e23, e31, e12 e12396,397
+e01, e02, e03, e23, e31,e31396,397
+e01, e02, e03, e23,e23396,397
+e01, e02, e03,e03396,397
+e01, e02,e02396,397
+e01,e01396,397
+e01 e01397,398
+e02 e02398,399
+e03 e03399,400
+e23 e23400,401
+e31 e31401,402
+e12 e12402,403
+type instance instance418,419
+type instance Index Index418,419
+type instance instance419,420
+type instance IxValue IxValue419,420
+squaredError squaredError433,434
+squaredError squaredError434,435
+(><)><439,440
+Plucker Plucker440,441
+isotropic isotropic445,446
+isotropic isotropic446,447
+intersects intersects450,451
+intersects intersects451,452
+data LinePass LinePass457,458
+data LinePass = CoplanarCoplanar457,458
+              | ClockwiseClockwise459,460
+              | CounterclockwiseCounterclockwise462,463
+passes passes473,474
+passes passes474,475
+parallel parallel484,485
+parallel parallel485,486
+toUV toUV492,493
+toUV toUV493,494
+coincides coincides496,497
+coincides coincides497,498
+coincides' coincides'505,506
+coincides' coincides'506,507
+quadranceToOrigin quadranceToOrigin513,514
+quadranceToOrigin quadranceToOrigin514,515
+closestToOrigin closestToOrigin519,520
+closestToOrigin closestToOrigin520,521
+isLine isLine528,529
+isLine isLine529,530
+data instance instance535,536
+data instance U.Vector    (Plucker a) =  V_Plucker V_Plucker535,536
+data instance instance536,537
+data instance U.MVector s (Plucker a) = MV_Plucker MV_Plucker536,537
+
+./linear/src/Linear/Vector.hs,998
+module Linear.VectorLinear.Vector20,21
+newtype E E63,64
+newtype E t = E E63,64
+newtype E t = E { el el63,64
+class GAdditive GAdditive69,70
+  gzero :: Num a => f f70,71
+  gzero gzero70,71
+  gliftU2 gliftU271,72
+  gliftI2 gliftI272,73
+instance instance74,75
+class Functor f => Additive Additive116,117
+  default liftI2 :: Applicative f => (a a168,169
+  zero zero118,119
+  zero zero122,123
+  (^+^)^+^130,131
+  (^(131,132
+  (^-^)^-^138,139
+  x x139,140
+  lerp lerp142,143
+  lerp lerp143,144
+  liftU2 liftU2151,152
+  liftU2 liftU2155,156
+  liftI2 liftI2165,166
+  liftI2 liftI2169,170
+negated negated271,272
+negated negated272,273
+sumV sumV279,280
+sumV sumV280,281
+(*^)*^287,288
+(^*)^*295,296
+f f296,297
+(^/)^/300,301
+basis basis306,307
+basis basis307,308
+basisFor basisFor311,312
+basisFor basisFor312,313
+scaled scaled323,324
+scaled scaled324,325
+unit unit334,335
+unit unit335,336
+outer outer338,339
+outer outer339,340
+
+./linear/src/Linear/V1.hs,549
+module Linear.V1Linear.V141,42
+--data --data107,108
+newtype V1 V1108,109
+newtype V1 a = V1 V1108,109
+instance instance121,122
+class R1 R1236,237
+class R1 R1236,237
+  _x _x244,245
+ex ex246,247
+ex ex247,248
+type instance instance293,294
+type instance Index Index293,294
+type instance instance294,295
+type instance IxValue IxValue294,295
+newtype instance instance304,305
+newtype instance U.Vector    (V1 a) = V_V1 V_V1304,305
+newtype instance instance305,306
+newtype instance U.MVector s (V1 a) = MV_V1 MV_V1305,306
+
+./linear/src/Linear/Covector.hs,288
+module Linear.CovectorLinear.Covector10,11
+newtype Covector Covector25,26
+newtype Covector r a = Covector Covector25,26
+newtype Covector r a = Covector { runCovector runCovector25,26
+($*)$*29,30
+Covector Covector30,31
+instance instance32,33
+  Covector m `mplus`mplus60,61
+
+./linear/src/Linear/Conjugate.hs,290
+module Linear.ConjugateLinear.Conjugate17,18
+class Num a => Conjugate Conjugate28,29
+  default conjugate :: TrivialConjugate a => a a38,39
+  conjugate conjugate36,37
+  conjugate conjugate39,40
+class Conjugate a => TrivialConjugate TrivialConjugate47,48
+instance instance65,66
+
+./linear/src/Linear/V0.hs,427
+module Linear.V0Linear.V040,41
+data V0 V093,94
+data V0 a = V0 V093,94
+instance instance103,104
+type instance instance278,279
+type instance Index Index278,279
+type instance instance279,280
+type instance IxValue IxValue279,280
+newtype instance instance289,290
+newtype instance U.Vector    (V0 a) = V_V0 V_V0289,290
+newtype instance instance290,291
+newtype instance U.MVector s (V0 a) = MV_V0 MV_V0290,291
+
+./linear/src/Linear/V4.hs,3074
+module Linear.V4Linear.V433,34
+data V4 V497,98
+data V4 a = V4 V497,98
+instance instance107,108
+class R3 t => R4 R4249,250
+class R3 t => R4 R4249,250
+  _w _w253,254
+  _xyzw _xyzw254,255
+_xw, _yw, _zw, _wx, _wy, _wz _wz256,257
+_xw, _yw, _zw, _wx, _wy,_wy256,257
+_xw, _yw, _zw, _wx,_wx256,257
+_xw, _yw, _zw,_zw256,257
+_xw, _yw,_yw256,257
+_xw,_xw256,257
+_xw _xw257,258
+_yw _yw260,261
+_zw _zw263,264
+_wx _wx266,267
+_wy _wy269,270
+_wz _wz272,273
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx, _zwy, _wxy, _wxz, _wyx, _wyz, _wzx, _wzy _wzy275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx, _zwy, _wxy, _wxz, _wyx, _wyz, _wzx,_wzx275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx, _zwy, _wxy, _wxz, _wyx, _wyz,_wyz275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx, _zwy, _wxy, _wxz, _wyx,_wyx275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx, _zwy, _wxy, _wxz,_wxz275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx, _zwy, _wxy,_wxy275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx, _zwy,_zwy275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw, _zwx,_zwx275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw, _zyw,_zyw275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz, _zxw,_zxw275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx, _ywz,_ywz275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw, _ywx,_ywx275,276
+_xyw, _xzw, _xwy, _xwz, _yxw, _yzw,_yzw275,276
+_xyw, _xzw, _xwy, _xwz, _yxw,_yxw275,276
+_xyw, _xzw, _xwy, _xwz,_xwz275,276
+_xyw, _xzw, _xwy,_xwy275,276
+_xyw, _xzw,_xzw275,276
+_xyw,_xyw275,276
+_xyw _xyw276,277
+_xzw _xzw279,280
+_xwy _xwy282,283
+_xwz _xwz285,286
+_yxw _yxw288,289
+_yzw _yzw291,292
+_ywx _ywx294,295
+_ywz _ywz297,298
+_zxw _zxw300,301
+_zyw _zyw303,304
+_zwx _zwx306,307
+_zwy _zwy309,310
+_wxy _wxy312,313
+_wxz _wxz315,316
+_wyx _wyx318,319
+_wyz _wyz321,322
+_wzx _wzx324,325
+_wzy _wzy327,328
+_xywz _xywz333,334
+_xzyw _xzyw336,337
+_xzwy _xzwy339,340
+_xwyz _xwyz342,343
+_xwzy _xwzy345,346
+_yxzw _yxzw348,349
+_yxwz _yxwz351,352
+_yzxw _yzxw354,355
+_yzwx _yzwx357,358
+_ywxz _ywxz360,361
+_ywzx _ywzx363,364
+_zxyw _zxyw366,367
+_zxwy _zxwy369,370
+_zyxw _zyxw372,373
+_zywx _zywx375,376
+_zwxy _zwxy378,379
+_zwyx _zwyx381,382
+_wxyz _wxyz384,385
+_wxzy _wxzy387,388
+_wyxz _wyxz390,391
+_wyzx _wyzx393,394
+_wzxy _wzxy396,397
+_wzyx _wzyx399,400
+ew ew402,403
+ew ew403,404
+vector vector445,446
+vector vector446,447
+point point451,452
+point point452,453
+normalizePoint normalizePoint460,461
+normalizePoint normalizePoint461,462
+type instance instance510,511
+type instance Index Index510,511
+type instance instance511,512
+type instance IxValue IxValue511,512
+data instance instance519,520
+data instance U.Vector    (V4 a) =  V_V4 V_V4519,520
+data instance instance520,521
+data instance U.MVector s (V4 a) = MV_V4 MV_V4520,521
+
+./linear/src/Linear/V2.hs,721
+module Linear.V2Linear.V235,36
+data V2 V2105,106
+data V2 a = V2 V2105,106
+instance instance116,117
+class R1 t => R2 R2247,248
+class R1 t => R2 R2247,248
+  _y _y255,256
+  _y _y256,257
+  _xy _xy259,260
+_yx _yx264,265
+_yx _yx265,266
+ey ey268,269
+ey ey269,270
+perp perp289,290
+perp perp290,291
+type instance instance343,344
+type instance Index Index343,344
+type instance instance344,345
+type instance IxValue IxValue344,345
+data instance instance354,355
+data instance U.Vector    (V2 a) =  V_V2 V_V2354,355
+data instance instance355,356
+data instance U.MVector s (V2 a) = MV_V2 MV_V2355,356
+angle angle406,407
+angle angle407,408
+crossZ crossZ413,414
+crossZ crossZ414,415
+
+./linear/src/Linear/Projection.hs,378
+module Linear.ProjectionLinear.Projection17,18
+lookAt lookAt43,44
+perspective perspective63,64
+inversePerspective inversePerspective92,93
+frustum frustum116,117
+inverseFrustum inverseFrustum141,142
+infinitePerspective infinitePerspective163,164
+inverseInfinitePerspective inverseInfinitePerspective183,184
+ortho ortho229,230
+inverseOrtho inverseOrtho248,249
+
+./linear/src/Linear/Affine.hs,1065
+module Linear.Affine Linear.Affine27,28
+class Additive (Diff p) => Affine Affine84,85
+  (.-^) :: Num a => p p97,98
+  type Diff Diff85,86
+  type Diff p p85,86
+  (.-.).-.89,90
+  (.+^).+^93,94
+  (.-^).-^97,98
+  p p98,99
+qdA qdA102,103
+qdA qdA103,104
+distanceA distanceA107,108
+distanceA distanceA108,109
+newtype Point Point137,138
+newtype Point f a = P P137,138
+instance instance155,156
+lensP lensP188,189
+lensP lensP189,190
+_Point _Point192,193
+_Point _Point193,194
+(.#).#204,205
+f f205,206
+(#.)#.208,209
+(#(209,210
+(.#), (#.)#.212,213
+(.#).#212,213
+unP unP219,220
+unP unP220,221
+type instance instance245,246
+type instance Index Index245,246
+type instance instance246,247
+type instance IxValue IxValue246,247
+origin origin288,289
+origin origin289,290
+relative relative293,294
+relative relative294,295
+newtype instance instance297,298
+newtype instance U.Vector    (Point f a) =  V_P V_P297,298
+newtype instance instance298,299
+newtype instance U.MVector s (Point f a) = MV_P MV_P298,299
+
+./linear/src/Linear/V.hs,1643
+module Linear.VLinear.V41,42
+class Dim Dim121,122
+class Dim Dim121,122
+  reflectDim reflectDim122,123
+type role role125,126
+class Finite Finite127,128
+  default toV :: Foldable v => v v130,131
+  type Size Size128,129
+  type Size (v v::*->*128,129
+  toV toV129,130
+  toV toV131,132
+  fromV fromV132,133
+instance instance134,135
+_V _V139,140
+_V _V140,141
+_V' _V'142,143
+_V' _V'143,144
+newtype V V151,152
+newtype V n a = V V151,152
+newtype V n a = V { toVector toVector151,152
+dim dim159,160
+dim dim160,161
+data ReifiedDim ReifiedDim169,170
+retagDim retagDim171,172
+retagDim retagDim172,173
+reifyDimNat reifyDimNat181,182
+reifyDimNat reifyDimNat182,183
+reifyVectorNat reifyVectorNat185,186
+reifyVectorNat reifyVectorNat186,187
+reifyDim reifyDim191,192
+reifyDim reifyDim192,193
+reifyVector reifyVector197,198
+reifyVector reifyVector198,199
+fromVector fromVector384,385
+fromVector fromVector385,386
+data Z Z390,391
+data D D391,392
+data SD SD392,393
+data PD PD393,394
+retagD retagD399,400
+retagD retagD400,401
+retagSD retagSD403,404
+retagSD retagSD404,405
+retagPD retagPD407,408
+retagPD retagPD408,409
+int int427,428
+int int428,429
+type instance instance443,444
+type instance Index Index443,444
+type instance instance444,445
+type instance IxValue IxValue444,445
+vConstr vConstr469,470
+vConstr vConstr470,471
+vDataType vDataType473,474
+vDataType vDataType474,475
+data instance instance538,539
+data instance U.Vector    (V n a) =  V_VN V_VN538,539
+data instance instance539,540
+data instance U.MVector s (V n a) = MV_VN MV_VN539,540
+
+./linear/src/Linear/Metric.hs,509
+module Linear.MetricLinear.Metric16,17
+class Additive f => Metric Metric35,36
+  signorm :: Floating a => f f65,66
+  dot dot41,42
+  dot dot44,45
+  quadrance quadrance49,50
+  quadrance quadrance50,51
+  qd qd53,54
+  qd qd54,55
+  distance distance57,58
+  distance distance58,59
+  norm norm61,62
+  norm norm62,63
+  signorm signorm65,66
+  signorm signorm66,67
+instance instance69,70
+normalize normalize90,91
+normalize normalize91,92
+project project95,96
+project project96,97
+
+./linear/src/Linear/Quaternion.hs,1820
+module Linear.QuaternionLinear.Quaternion29,30
+data Quaternion Quaternion94,95
+data Quaternion a = Quaternion Quaternion94,95
+instance instance105,106
+type instance instance188,189
+type instance Index Index188,189
+type instance instance189,190
+type instance IxValue IxValue189,190
+qNaN qNaN260,261
+qNaN qNaN261,262
+  Quaternion e v `dot`dot285,286
+class Complicated Complicated289,290
+class Complicated Complicated289,290
+  _e, _i _i290,291
+  _e,_e290,291
+ee, ei ei292,293
+ee,ee292,293
+ee ee293,294
+ei ei294,295
+class Complicated t => Hamiltonian Hamiltonian309,310
+class Complicated t => Hamiltonian Hamiltonian309,310
+  _j, _k _k310,311
+  _j,_j310,311
+  _ijk _ijk311,312
+ej, ek ek313,314
+ej,ej313,314
+ej ej314,315
+ek ek315,316
+reimagine reimagine336,337
+reimagine reimagine337,338
+qi qi345,346
+qi qi346,347
+absi absi350,351
+absi absi351,352
+pow pow355,356
+pow pow356,357
+sqrte2pqiq sqrte2pqiq359,360
+sqrte2pqiq sqrte2pqiq360,361
+tanrhs tanrhs370,371
+tanrhs tanrhs371,372
+tanhrhs tanhrhs468,469
+tanhrhs tanhrhs469,470
+cut cut479,480
+cut cut480,481
+cutWith cutWith489,490
+cutWith cutWith490,491
+asinq asinq497,498
+asinq asinq498,499
+acosq acosq505,506
+acosq acosq506,507
+atanq atanq513,514
+atanq atanq514,515
+asinhq asinhq521,522
+asinhq asinhq522,523
+acoshq acoshq529,530
+acoshq acoshq530,531
+atanhq atanhq537,538
+atanhq atanhq538,539
+slerp slerp546,547
+slerp slerp547,548
+rotate rotate558,559
+rotate rotate559,560
+axisAngle axisAngle570,571
+axisAngle axisAngle571,572
+data instance instance575,576
+data instance U.Vector    (Quaternion a) =  V_Quaternion V_Quaternion575,576
+data instance instance576,577
+data instance U.MVector s (Quaternion a) = MV_Quaternion MV_Quaternion576,577
+
+./linear/src/Linear/Trace.hs,242
+module Linear.TraceLinear.Trace20,21
+class Functor m => Trace Trace51,52
+  default diagonal :: Monad m => m m69,70
+  trace trace56,57
+  trace trace59,60
+  diagonal diagonal67,68
+  diagonal diagonal70,71
+instance instance74,75
+
+./linear/src/Linear/Instances.hs,73
+module Linear.Instances Linear.Instances15,16
+instance instance29,30
+
+./linear/src/Linear/V3.hs,1046
+module Linear.V3Linear.V334,35
+data V3 V390,91
+data V3 a = V3 V390,91
+instance instance100,101
+class R2 t => R3 R3237,238
+class R2 t => R3 R3237,238
+  _z _z241,242
+  _xyz _xyz243,244
+_xz, _yz, _zx, _zy _zy245,246
+_xz, _yz, _zx,_zx245,246
+_xz, _yz,_yz245,246
+_xz,_xz245,246
+_xz _xz247,248
+_yz _yz250,251
+_zx _zx253,254
+_zy _zy256,257
+_xzy, _yxz, _yzx, _zxy, _zyx _zyx259,260
+_xzy, _yxz, _yzx, _zxy,_zxy259,260
+_xzy, _yxz, _yzx,_yzx259,260
+_xzy, _yxz,_yxz259,260
+_xzy,_xzy259,260
+_xzy _xzy261,262
+_yxz _yxz264,265
+_yzx _yzx267,268
+_zxy _zxy270,271
+_zyx _zyx273,274
+ez ez276,277
+ez ez277,278
+cross cross310,311
+cross cross311,312
+triple triple315,316
+triple triple316,317
+type instance instance363,364
+type instance Index Index363,364
+type instance instance364,365
+type instance IxValue IxValue364,365
+data instance instance374,375
+data instance U.Vector    (V3 a) =  V_V3 V_V3374,375
+data instance instance375,376
+data instance U.MVector s (V3 a) = MV_V3 MV_V3375,376
+
+./linear/src/Linear/Matrix.hs,1710
+module Linear.MatrixLinear.Matrix18,19
+column column70,71
+column column71,72
+(!*!)!*!90,91
+f f91,92
+(!+!)!+!98,99
+as as99,100
+(!-!)!-!106,107
+(!*)!*114,115
+m m115,116
+(*!)*!126,127
+(*!!)*!!134,135
+s s135,136
+(!!*)!!*143,144
+(!(144,145
+(!!/)!!/149,150
+adjoint adjoint157,158
+adjoint adjoint158,159
+type M22 M22166,167
+type M22 a a166,167
+type M23 M23168,169
+type M24 M24170,171
+type M32 M32172,173
+type M33 M33174,175
+type M34 M34176,177
+type M42 M42178,179
+type M43 M43180,181
+type M44 M44182,183
+fromQuaternion fromQuaternion185,186
+fromQuaternion fromQuaternion186,187
+mkTransformationMat mkTransformationMat203,204
+mkTransformationMat mkTransformationMat204,205
+mkTransformation mkTransformation211,212
+mkTransformation mkTransformation212,213
+m43_to_m44 m43_to_m44216,217
+m43_to_m44m43_to_m44217,218
+m33_to_m44 m33_to_m44229,230
+m33_to_m44 m33_to_m44230,231
+identity identity239,240
+identity identity240,241
+translation translation244,245
+translation translation245,246
+_m22 _m22257,258
+_m22 _m22258,259
+_m23 _m23262,263
+_m23 _m23263,264
+_m24 _m24267,268
+_m24 _m24268,269
+_m32 _m32272,273
+_m32 _m32273,274
+_m33 _m33277,278
+_m33 _m33278,279
+_m34 _m34282,283
+_m34 _m34283,284
+_m42 _m42287,288
+_m42 _m42288,289
+_m43 _m43292,293
+_m43 _m43293,294
+_m44 _m44297,298
+_m44 _m44298,299
+det22 det22304,305
+det22 det22305,306
+det33 det33312,313
+det33 det33313,314
+det44 det44319,320
+det44 det44320,321
+inv22 inv22345,346
+inv22 inv22346,347
+inv33 inv33354,355
+inv33 inv33355,356
+transpose transpose379,380
+transpose transpose380,381
+inv44 inv44384,385
+inv44 inv44385,386
+
+./linear/src/Linear/Binary.hs,149
+module Linear.BinaryLinear.Binary13,14
+putLinear putLinear30,31
+putLinear putLinear31,32
+getLinear getLinear34,35
+getLinear getLinear35,36
+
+./linear/src/Linear.hs,27
+module LinearLinear12,13
+
+./linear/Warning.hs,27
+module WarningWarning0,1
+
+./linear/Setup.lhs,73
+module Main Main3,4
+main main12,13
+main main13,14
+main main28,29
+
+./test/AccelUtils.hs,0
+
+./test/Simplex.hs,132
+module Simplex Simplex0,1
+wyndor wyndor5,6
+wyndor wyndor6,7
+wyndorInitBF wyndorInitBF12,13
+wyndorInitBF wyndorInitBF13,14
+
+./src/Linprog.hs,28
+module Linprog Linprog0,1
+
+./src/AccelUtils.hs,852
+module AccelUtils AccelUtils5,6
+type Matrix Matrix14,15
+type Matrix a a14,15
+(#+#)#+#18,19
+(#(20,21
+(#-#)#-#27,28
+argmin argmin68,69
+argmin argmin70,71
+imin imin73,74
+imin imin75,76
+untup_ untup_82,83
+untup_ untup_83,84
+nRows nRows85,86
+nRows nRows86,87
+nCols nCols88,89
+nCols nCols89,90
+get1 get191,92
+get1 get192,93
+get2 get294,95
+get2 get295,96
+rowOf rowOf97,98
+rowOf rowOf98,99
+colOf colOf100,101
+colOf colOf101,102
+vecOf vecOf103,104
+vecOf vecOf104,105
+arrOf arrOf106,107
+arrOf arrOf107,108
+vecOf1 vecOf1109,110
+vecOf1 vecOf1110,111
+fixEither fixEither114,115
+fixEither fixEither115,116
+fstMap fstMap119,120
+fstMap fstMap120,121
+sndMap sndMap122,123
+sndMap sndMap123,124
+runExp runExp125,126
+runExp runExp126,127
+getScalar getScalar128,129
+getScalar getScalar129,130
+
+./src/Simplex.hs,330
+module Simplex Simplex4,5
+type Init Init21,22
+type IR IR22,23
+initSimplex initSimplex26,27
+initSimplex initSimplex27,28
+simplex simplex29,30
+simplex simplex30,31
+getSolution getSolution93,94
+getSolution getSolution94,95
+minZCoeff minZCoeff109,110
+minZCoeff minZCoeff111,112
+eta eta132,133
+eta eta134,135
+
+./src/Problem.hs,1113
+module Problem Problem0,1
+main main4,5
+main main5,6
+data Bound Bound8,9
+data Bound x =  x x8,9
+             |  x x9,10
+             |  x x10,11
+             |  x x11,12
+             |  Free Free12,13
+obj obj15,16
+obj obj16,17
+data Solution Solution23,24
+data Solution = UndefinedUndefined23,24
+              | Feasible Feasible24,25
+              | Infeasible Infeasible25,26
+              | NoFeasibleNoFeasible26,27
+              | Optimal Optimal27,28
+              | UnboundedUnbounded28,29
+data Constraints Constraints31,32
+data Constraints = Dense Dense31,32
+data Optimization Optimization33,34
+data Optimization = Maximize Maximize33,34
+                  | Minimize Minimize34,35
+objCoeffs objCoeffs36,37
+objCoeffs objCoeffs37,38
+type Bounds Bounds40,41
+data LPprob LPprob42,43
+data LPprob = LPprob LPprob42,43
+data LPprob = LPprob { lpObjfunc lpObjfunc42,43
+                     , lpConstrs lpConstrs43,44
+                     , lpBounds lpBounds44,45
+verifyProblem verifyProblem48,49
+verifyProblem verifyProblem49,50
+bndsOK bndsOK55,56
+
+./hmatrix-glpk/LinearProgramming/L1.hs,282
+module Numeric.LinearProgramming.L1 Numeric.LinearProgramming.L110,11
+lInfSolveO lInfSolveO22,23
+lInfSolveO lInfSolveO23,24
+l1SolveO l1SolveO39,40
+l1SolveO l1SolveO40,41
+l1SolveU l1SolveU58,59
+l1SolveU l1SolveU59,60
+l1Solve l1Solve78,79
+l1SolveGT l1SolveGT103,104
+
+./hmatrix-glpk/examples/simplex5.hs,212
+gamma gamma4,5
+sigma sigma5,6
+n n6,7
+cost_fun cost_fun7,8
+cost_fun cost_fun8,9
+size_fun size_fun9,10
+size_fun size_fun10,11
+prob prob12,13
+bnds bnds13,14
+constr1 constr115,16
+main main24,25
+
+./hmatrix-glpk/examples/simplex4.hs,72
+prob prob5,6
+constr constr7,8
+bounds bounds17,18
+main main23,24
+
+./hmatrix-glpk/examples/simplex1.hs,72
+objFun objFun4,5
+constr constr6,7
+bnds bnds11,12
+main main15,16
+
+./hmatrix-glpk/examples/simplex3.hs,72
+prob prob5,6
+constr constr7,8
+bounds bounds17,18
+main main23,24
+
+./hmatrix-glpk/examples/simplex2.hs,97
+prob prob2,3
+constr1 constr14,5
+constr2 constr28,9
+constr3 constr312,13
+main main16,17
+
+./hmatrix-glpk/LinearProgramming.hs,2071
+module Numeric.LinearProgramming(Numeric.LinearProgramming75,76
+--debug --debug97,98
+(#)#102,103
+(#(104,105
+data Bound Bound106,107
+data Bound x =  x x106,107
+             |  x x107,108
+             |  x x108,109
+             |  x x109,110
+             |  Free Free110,111
+data Solution Solution113,114
+data Solution = UndefinedUndefined113,114
+              | Feasible Feasible114,115
+              | Infeasible Infeasible115,116
+              | NoFeasibleNoFeasible116,117
+              | Optimal Optimal117,118
+              | UnboundedUnbounded118,119
+data Constraints Constraints121,122
+data Constraints = Dense Dense121,122
+                 | Sparse Sparse122,123
+                 | General General123,124
+data Optimization Optimization125,126
+data Optimization = Maximize Maximize125,126
+                  | Minimize Minimize126,127
+type Bounds Bounds128,129
+sparseOfGeneral sparseOfGeneral131,132
+sparseOfGeneral sparseOfGeneral132,133
+simplex simplex139,140
+simplex simplex141,142
+exact exact160,161
+exact exact162,163
+adapt adapt180,181
+adapt adapt181,182
+extract extract188,189
+extract extract189,190
+obj obj203,204
+obj obj204,205
+withObj withObj210,211
+withObj withObj211,212
+tb tb217,218
+tb tb218,219
+lb lb224,225
+lb lb225,226
+ub ub231,232
+ub ub232,233
+mkBound1 mkBound1238,239
+mkBound1 mkBound1239,240
+mkBound2 mkBound2241,242
+mkBound2 mkBound2242,243
+mkBounds mkBounds244,245
+mkBounds mkBounds245,246
+mkConstrD mkConstrD254,255
+mkConstrD mkConstrD255,256
+mkConstrS mkConstrS266,267
+mkConstrS mkConstrS267,268
+--a --a279,280
+simplexSparse simplexSparse289,290
+simplexSparse simplexSparse290,291
+exactSparse exactSparse302,303
+exactSparse exactSparse303,304
+glpFR, glpLO, glpUP, glpDB, glpFX glpFX308,309
+glpFR, glpLO, glpUP, glpDB,glpDB308,309
+glpFR, glpLO, glpUP,glpUP308,309
+glpFR, glpLO,glpLO308,309
+glpFR,glpFR308,309
+glpFR glpFR309,310
+glpLO glpLO310,311
+glpUP glpUP311,312
+glpDB glpDB312,313
+glpFX glpFX313,314
+
+./Setup.hs,15
+main main1,2
+
+./mwc-random-accelerate/benchmarks/Benchmarks.hs,180
+module Main Main4,5
+makeMWCArray makeMWCArray20,21
+makeMWCArray makeMWCArray21,22
+makeVector makeVector36,37
+makeVector makeVector37,38
+main main45,46
+main main46,47
+
+./mwc-random-accelerate/Setup.hs,15
+main main1,2
+
+./mwc-random-accelerate/Data/Array/Accelerate/System/Random/MWC.hs,369
+module Data.Array.Accelerate.System.Random.MWC Data.Array.Accelerate.System.Random.MWC15,16
+type sh sh38,39
+type sh :~> :~>38,39
+uniform uniform44,45
+uniform uniform45,46
+uniformR uniformR50,51
+uniformR uniformR51,52
+randomArray randomArray59,60
+randomArray randomArray60,61
+randomArrayWith randomArrayWith75,76
+runRandomArray runRandomArray90,91
+
+./mwc-random-accelerate/Data/Array/Accelerate/System/Random/SFMT.hs,371
+module Data.Array.Accelerate.System.Random.SFMT Data.Array.Accelerate.System.Random.SFMT15,16
+type sh sh37,38
+type sh :~> :~>37,38
+uniform uniform43,44
+uniform uniform44,45
+uniformR uniformR49,50
+uniformR uniformR50,51
+randomArray randomArray57,58
+randomArray randomArray58,59
+randomArrayWith randomArrayWith73,74
+runRandomArray runRandomArray88,89

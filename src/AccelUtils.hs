@@ -70,13 +70,25 @@ argmin :: (Shape sh, Elt e, A.Ord e)
        => Acc (Array sh e) -> Exp sh
 argmin arr = A.fst $ imin arr
 
+-- | (index, value) of minimum element
 imin :: forall sh e. (Shape sh, Elt e, A.Ord e)
      => Acc (Array sh e) -> Exp (sh, e)
 imin xs = the $ fold1All f (indexed xs)
     where
       f a b = let (_ :: Exp sh, av :: Exp e) = unlift a
                   (_ :: Exp sh, bv :: Exp e) = unlift b
-              in  (av A.>= bv) ? (a, b)
+              in  (av A.<= bv) ? (a, b)
+
+-- | (index, value) of best element as determined by the
+-- given comparator
+iCmpWith :: forall sh e. (Shape sh, Elt e)
+     => (Exp e -> Exp e -> Exp Bool) -> Acc (Array sh e) -> Exp (sh, e)
+iCmpWith cmp xs = the $ fold1All f (indexed xs)
+    where
+      f a b = let (_ :: Exp sh, av :: Exp e) = unlift a
+                  (_ :: Exp sh, bv :: Exp e) = unlift b
+              in  cmp av bv ? (a, b)
+
 
 -- This seems dangerous for nested data parallelism
 untup_ :: (Elt a, Elt b) => Exp (a, b) -> (Exp a, Exp b)
@@ -109,7 +121,6 @@ arrOf rows cols es = use $ A.fromList (Z:. rows :. cols) es
 vecOf1 :: (Elt e) => Exp e -> Acc (Vector e)
 vecOf1 e = reshape (constant (Z:.1)) $ unit e
 
-
 -- | Fixed point of the Either monad. Feed the output of Right back into
 -- the given function until a Left is produced. May never terminate.
 fixEither :: (a -> Either b a) -> a -> b
@@ -117,14 +128,25 @@ fixEither f a = case f a of
   Left b -> b
   Right a' -> fixEither f a'
 
-runExp :: (Elt e) => Exp e -> e
-runExp e = indexArray (run (unit e)) Z
-
 fstMap :: (Elt a, Elt b, Elt e) => (Exp a -> Exp b) -> Exp (a, e) -> Exp (b, e)
 fstMap f tup = lift (f (A.fst tup), A.snd tup)
 
 sndMap :: (Elt a, Elt b, Elt e) => (Exp a -> Exp b) -> Exp (e, a) -> Exp (e, b)
 sndMap f tup = lift (A.fst tup, f (A.snd tup))
 
-getScalar :: Scalar a -> a
+runExp :: (Elt e) => Exp e -> e
+runExp = getScalar . run . unit
+
+getScalar :: Scalar e -> e
 getScalar scalar = indexArray scalar Z
+
+thrd :: forall a b c. (Elt a, Elt b, Elt c) => Exp (a, b, c) -> Exp c
+thrd e = let (_::Exp a, _::Exp b, x) = unlift e in x
+
+tup3 :: (Elt a, Elt b, Elt c) => Exp a -> Exp b -> Exp c -> Exp (a, b, c)
+tup3 a b c = lift (a, b, c)
+
+div23 :: forall a n. (Elt a, Elt n, A.Floating n)
+      => Exp (a, n, n) -> Exp (a, n)
+div23 tup = let (a::Exp a, n1::Exp n, n2::Exp n) = unlift tup
+            in lift (a, n1/n2)
