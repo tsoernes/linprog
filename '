@@ -1,17 +1,11 @@
-{-# LANGUAGE TupleSections #-}
-
-import           Data.List (minimumBy)
+import           Data.List (maximumBy)
 import           Data.Ord  (comparing)
 
 main :: IO ()
 main = do
-  let n_sn_pairs = concatMap (\(n, sns) -> map (n,) sns) $ zip [1..4] possibleStates
-  mapM_  (uncurry popt) n_sn_pairs
-  -- TODO get all optimal decisions
+  print $ fnOpt 4 1
   print ""
 
-popt :: Int -> Int -> IO ()
-popt n sn = print $ "n: " ++ show n ++ " sn: " ++ show sn ++ " dec,val: " ++ show (fnOpt n sn)
 
 -- Kont 2015, Oppg3
 -- Step: n = 1..4 : year
@@ -29,7 +23,7 @@ fnOpt :: Int        -- ^ Step 'n'
       -> Int        -- ^ State 'sn'
       -> (Int, Int) -- ^ (Decision, Value)
 fnOpt 5 _ = (0, 0) -- Can't build any fabs in the fifth year, so the cost is 0
-fnOpt n sn = minimumBy (comparing snd) outcomes
+fnOpt n sn = maximumBy (comparing snd) outcomes
   where
     outcomes = zip xs $ map (fn n sn) xs
     x_min = max (minFabs n - sn) 0
@@ -50,7 +44,6 @@ possibleStates = [[0], [1,2,3], [2,3,4,5], [4,5]]
 setupCostTotal :: Int -- ^ year 'n'
                -> Int -- ^ number of fabs 'x'
                -> Int -- ^ cost
-setupCostTotal _ 0 = 0
 setupCostTotal n x = 1000 + x * setupCost n
 
 -- | Cost for creating a fab at year n
