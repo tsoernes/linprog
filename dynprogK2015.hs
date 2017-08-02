@@ -3,16 +3,6 @@
 import           Data.List (minimumBy)
 import           Data.Ord  (comparing)
 
-main :: IO ()
-main = do
-  let n_sn_pairs = concatMap (\(n, sns) -> map (n,) sns) $ zip [1..4] possibleStates
-  mapM_  (uncurry popt) n_sn_pairs
-  -- TODO get all optimal decisions
-  print ""
-
-popt :: Int -> Int -> IO ()
-popt n sn = print $ "n: " ++ show n ++ " sn: " ++ show sn ++ " dec,val: " ++ show (fnOpt n sn)
-
 -- Kont 2015, Oppg3
 -- Step: n = 1..4 : year
 -- State: s_n: total number of ready-to-use fabs at the start of year 'n'
@@ -23,25 +13,42 @@ popt n sn = print $ "n: " ++ show n ++ " sn: " ++ show sn ++ " dec,val: " ++ sho
 --      the number of fabs built this year
 -- Base cases: see `fnOpt 5`
 
+main :: IO ()
+main = do
+  -- let n_sn_pairs = concatMap (\(n, sns) -> map (n,) sns) $ zip [1..4] possibleStates
+  -- mapM_  (uncurry popt) n_sn_pairs
+  print $ fnOpt 1 0
+  -- "n: 1 sn: 0 dec,val: ([3,0,2,0,0],12200)"
+  -- The optimal decions are to build 3 fabs year 1 (first year),
+  -- 2 fabs year 3, which results in a total (minimum) cost of 12200
+  print ""
 
--- | Optimal decision and corresponding value for step 'n' and onwards, given state
+
+-- | Pretty the input and the corresponding optimal output
+popt :: Int -> Int -> IO ()
+popt n sn = print $ "n: " ++ show n ++ " sn: " ++ show sn ++ " dec,val: " ++ show (fnOpt n sn)
+
+
+-- | Optimal decisions and corresponding value for step 'n' onwards
 fnOpt :: Int        -- ^ Step 'n'
       -> Int        -- ^ State 'sn'
-      -> (Int, Int) -- ^ (Decision, Value)
-fnOpt 5 _ = (0, 0) -- Can't build any fabs in the fifth year, so the cost is 0
+      -> ([Int], Int) -- ^ (Decisions, Value)
+fnOpt 5 _ = ([0], 0) -- Can't build any fabs in the fifth year, so the cost is 0
 fnOpt n sn = minimumBy (comparing snd) outcomes
   where
-    outcomes = zip xs $ map (fn n sn) xs
+    outcomes = zipWith (\x (xs', fn) -> (x:xs', fn)) xs $ map (fn n sn) xs
     x_min = max (minFabs n - sn) 0
     xs = [x_min..3]
 
 
--- | Total value for step 'n' and onwards; given state and decision
-fn :: Int -- ^ Step 'n', year
-   -> Int -- ^ State 'sn', total number of fabs created so far
-   -> Int -- ^ Decision 'xn', how many fabs to create this year
-   -> Int -- ^ Cost
-fn n sn xn = setupCostTotal n xn + snd (fnOpt (n+1) (sn+xn))
+-- | Future decisions (n+1) and total value for step 'n'
+fn :: Int           -- ^ Step 'n', year
+   -> Int           -- ^ State 'sn', total number of fabs created so far
+   -> Int           -- ^ Decision 'xn', how many fabs to create this year
+   -> ([Int], Int)    -- ^ (Decisions, Value)
+fn n sn xn = (decisions, setupCostTotal n xn + value)
+  where
+    (decisions, value) = fnOpt (n+1) (sn+xn)
 
 -- For states 1..4
 possibleStates :: [[Int]]
